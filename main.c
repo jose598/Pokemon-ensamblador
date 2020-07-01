@@ -1,5 +1,5 @@
 #include <stdlib.h>
-
+#include <stdio.h>
 
 int main(int argc, char **argv){
 int PokeAttack[18][18] = {{1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1},
@@ -20,4 +20,13 @@ int PokeAttack[18][18] = {{1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1},
 			{1,1,1,1,1,1,1,1,0.5,1,1,1,1,1,1,2,1,0},
 			{1,0.5,1,1,1,1,1,2,1,1,1,1,1,2,1,1,0.5,0.5},
 			{1,2,1,0.5,1,1,1,1,0.5,0.5,1,1,1,1,1,2,2,1}};
+
+int nPoke1,nPoke2; 
+int nramdon = rand()%(99-1+1) + 1; //rand()%(N-M+1) + M; Este está entre M y N
+printf("Bienvenido al sistema de combates Pokémon: \n");
+printf("ramdon: %d",nramdon);
+printf("\nIngrese el número del primer Pokémon para el combate: ");
+scanf("%d",&nPoke1);
+printf("\nIngrese el número del segundo Pokémon para el combate: ");
+scanf("%d",&nPoke2);
 }
