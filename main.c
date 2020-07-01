@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
+#define NUMBER 100
 
 //valida num entre 1 y 4
 int valOpcion(int n){
@@ -17,30 +19,54 @@ int valNum(int num){
 	return 1;
 }
 
-char lectura (int nramdon){
-	char *pokemenu[10]={};
-	FILE *fp=stdin;
-	char buf[10000];
+char **lectura (int nramdon){
+	char **pokemenu=(char **)malloc(NUMBER);
+	FILE *fp;
 	char *file="pokeTypes.txt";
 	int cont=1;
 	int num=0;
 	fp=fopen(file,"r");
 	while(!feof(fp) && num<10){
+		char buf[10000];
 	if((fscanf(fp,"%s",buf)>0)){
 			if(cont==nramdon){
-			printf("%s\n",buf);
-			pokemenu[num]=buf;
-			num++;
-			}else if (num>=1){pokemenu[num]=buf;printf("%s\n",buf); num++;}
+				char *p=(char *)malloc(NUMBER);
+				strcpy(p,buf);
+				pokemenu[num]=p;
+				num++;
+			}else if (num>=1){
+				char *p=(char*)malloc(NUMBER);
+				strcpy(p,buf);
+				pokemenu[num]=p;
+				num++;
+			}
 		cont++;
-	}
-	}
-printf("------\n");
-	for (int i=0; i<10;i++){
-
- 		printf("%s\n",pokemenu[i]);
+		}
 	}
 return pokemenu;
+}
+
+char **pokemones(char **lectura, int identificador){
+	char **pokeOpciones=(char **)malloc(NUMBER);
+	char **pokePoderes=(char **)malloc(NUMBER);
+	char *p;
+	for (int i=0; i<10;i++){
+ 		p=strtok(lectura[i],",");
+		if(p!=NULL){
+			char *puntero=(char *)malloc(NUMBER);
+			strcpy(puntero,p);
+			pokeOpciones[i]=puntero;	
+			p=strtok(NULL," ");
+			if(p!=NULL) {
+				char *puntero=(char *)malloc(NUMBER);
+				strcpy(puntero,p);
+				pokePoderes[i]=puntero;
+			}
+		}
+	}
+	if(identificador==0) return pokeOpciones;
+	return pokePoderes;
+
 }
 
 
@@ -78,11 +104,15 @@ int PokeAttack[18][18] = {{1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1},
 
 
 
-printf("Bienvenido al sistema de combates Pokémon: \n");
+printf("Bienvenido al sistema de combates Pokémon:\n");
 srand(time(NULL));
 nramdon = rand()%(99-1+1) + 1;
-printf("ramdon: %d\n",nramdon);
-lectura(nramdon);
+char **leer=lectura(nramdon);
+//char **pokemons=pokemones(leer,0);
+char **tipos=pokemones(leer,1);
+//for(int i=0;i<10;i++) printf("%d. %s\n",i+1,pokemons[i]);
+for(int j=0;j<10;j++) printf("%d. %s\n",j+1,tipos[j]);
+
 
 printf("%s",ingreso1);
 scanf("%d",&nPoke1);
@@ -97,9 +127,4 @@ while((valOpcion(nPoke2)==0) && (valNum(nPoke2)==0)){
 	printf("%s",error);
 	scanf("%d",&nPoke2);
 }
-/*
-for (int i=0; i<10; i++){
- printf("%s",&pokemenu[i]);
-}*/
-//printf("%s vs",&pokemenu[npoke1]);
 }
