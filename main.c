@@ -33,6 +33,7 @@ char **lectura (int nramdon){
 				char *p=(char *)malloc(NUMBER);
 				strcpy(p,buf);
 				pokemenu[num]=p;
+				
 				num++;
 			}else if (num>=1){
 				char *p=(char*)malloc(NUMBER);
@@ -46,26 +47,21 @@ char **lectura (int nramdon){
 return pokemenu;
 }
 
-char **pokemones(char **lectura, int identificador){
-	char **pokeOpciones=(char **)malloc(NUMBER);
-	char **pokePoderes=(char **)malloc(NUMBER);
+int **pokemones(char **lectura, char **pokemons,char **tipos){
+
 	char *p;
+
 	for (int i=0; i<10;i++){
  		p=strtok(lectura[i],",");
-		if(p!=NULL){
-			char *puntero=(char *)malloc(NUMBER);
-			strcpy(puntero,p);
-			pokeOpciones[i]=puntero;	
-			p=strtok(NULL," ");
-			if(p!=NULL) {
-				char *puntero=(char *)malloc(NUMBER);
-				strcpy(puntero,p);
-				pokePoderes[i]=puntero;
-			}
-		}
+		 if(p!=NULL){
+			pokemons[i]=p;
+				 p=strtok(NULL,",");
+				 if(p!=NULL) {
+				 tipos[i]=p;
+			   }
+		 }
 	}
-	if(identificador==0) return pokeOpciones;
-	return pokePoderes;
+	return 0;
 
 }
 int posicionSkin(char* Pokeskin[18],char* tipo){
@@ -99,7 +95,9 @@ int main(int argc, char **argv){
 	char* poke2;
 	int base=2;
 	int vidaP1=5;
-        int vidaP2=5;
+    int vidaP2=5;
+	char **pokemons=(char **)malloc(NUMBER);
+    char **tipos=(char **)malloc(NUMBER);
 	
 int PokeAttack[18][18] = {{1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1},
 			{2,1,0.5,0.5,1,2,0.5,0,2,1,1,1,1,0.5,2,1,2,0.5},
@@ -128,10 +126,9 @@ printf("Bienvenido al sistema de combates Pokémon:\n");
 srand(time(NULL));
 nramdon = rand()%(99-1+1) + 1;
 char **leer=lectura(nramdon);
-char **pokemons=pokemones(leer,0);
-char **tipos=pokemones(leer,1);
+
+pokemones(leer,pokemons,tipos);
 for(int i=0;i<10;i++) printf("%d. %s\n",i+1,pokemons[i]);
-//for(int j=0;j<10;j++) printf("%d. %s\n",j+1,tipos[j]);
 
 
 printf("%s",ingreso1);
