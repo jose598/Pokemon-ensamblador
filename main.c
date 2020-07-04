@@ -84,7 +84,7 @@ int posicionSkin(char* Pokeskin[18],char* tipo){
 }
 
 
-int batalla(int vidaA,int vidaD, int ataqueA, int ataqueD,char* pokeA,char* pokeD){
+int batalla(int vidaA,int vidaD, int ataqueA, int ataqueD,char* pokeA,char* pokeD,int formato){
 	printf("\n\n %s:Vida:%d Ataque:%d ataca a %s: Vida: %d Ataque: %d",pokeA,vidaA,ataqueA,pokeD,vidaD,ataqueD);
 	vidaD=vidaD-ataqueA;
 	if(vidaD<0){
@@ -92,9 +92,16 @@ int batalla(int vidaA,int vidaD, int ataqueA, int ataqueD,char* pokeA,char* poke
 	}
 	
 	printf("\n resultado del ataque");
+	if(formato==0){
 	printf("\n %s:Vida:%d Ataque:%d ",pokeA,vidaA,ataqueA);
 	printf("\n %s:Vida:%d Ataque:%d ",pokeD,vidaD,ataqueD);
-       return vidaD;
+	return vidaD;
+	}else{
+		printf("\n %s:Vida:%d Ataque:%d ",pokeD,vidaD,ataqueD);
+	    printf("\n %s:Vida:%d Ataque:%d ",pokeA,vidaA,ataqueA);
+		return vidaA;
+	}
+    return -1;
 }
 
 
@@ -184,12 +191,12 @@ ataqueP2=base*ataqueP2;
 printf("\nCombatientes: %s vs %s\n",poke1,poke2);
 
 while(vidaP2!=0 && vidaP1!=0){
-vidaP2=batalla(vidaP1,vidaP2, ataqueP1,ataqueP2, poke1, poke2);
+vidaP2=batalla(vidaP1,vidaP2, ataqueP1,ataqueP2, poke1, poke2,0);
 if(vidaP2==0){
-		printf("\n¡%s es el ganador!\n",poke2);
+		printf("\n¡%s es el ganador!\n",poke1);
 		return 0;
 		}
-vidaP1=batalla(vidaP2,vidaP1, ataqueP2,ataqueP1, poke2, poke1);
+vidaP1=batalla(vidaP2,vidaP1, ataqueP2,ataqueP1, poke2, poke1,1);
 	if(vidaP1==0){
 		printf("\n¡%s es el ganador!\n",poke2);
 		return 0;
