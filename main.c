@@ -120,7 +120,7 @@ int main(int argc, char **argv){
 	char **pokemons=(char **)malloc(NUMBER);
     char **tipos=(char **)malloc(NUMBER);
 	
-int PokeAttack[18][18] = {{1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1},
+float PokeAttack[18][18] = {{1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1},
 			{2,1,0.5,0.5,1,2,0.5,0,2,1,1,1,1,0.5,2,1,2,0.5},
 			{1,2,1,1,1,0.5,2,1,0.5,1,1,2,0.5,1,1,1,1,1},
 			{1,1,1,0.5,0.5,0.5,1,0.5,0,1,1,2,1,1,1,1,1,2},
@@ -180,12 +180,12 @@ tipoP1=tipos[nPoke1-1];
 tipoP2=tipos[nPoke2-1];
 int tipo1=posicionSkin(Pokeskin,tipoP1);
 int tipo2=posicionSkin(Pokeskin,tipoP2);
-int ataqueP1=PokeAttack[tipo2][tipo1];
-int ataqueP2=PokeAttack[tipo1][tipo2];
+float ataqueP1=PokeAttack[tipo1][tipo2];
+float ataqueP2=PokeAttack[tipo2][tipo1];
 ataqueP1=base*ataqueP1;
 ataqueP2=base*ataqueP2;
-//printf("\nt:%s a:%d ",tipoP1,ataqueP1);
-//printf("\nt:%s a:%d ",tipoP2,ataqueP2);
+printf("\nt:%s a:%f ",tipoP1,ataqueP1);
+printf("\nt:%s a:%f ",tipoP2,ataqueP2);
 
 //batalla
 printf("\nCombatientes: %s vs %s\n",poke1,poke2);
