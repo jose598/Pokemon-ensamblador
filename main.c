@@ -6,11 +6,17 @@
 
 //valida num entre 1 y 10
 int valOpcion(int n){
-    if(n<1 || n>10){
+    if(n<1 || n>11){
 	return 0;
     }else{
 	return -1;}
 }
+
+int validarSalida(int n){
+	if(n==11) printf("Gracias por jugar, Saliendo.... \n");
+	return 0;
+}
+
 int valNum(int num){
 	if(scanf("%d",&num)==0){
 		for (int c=getchar(); c!=EOF && c!=' ' && c!='\n'; c=getchar());
@@ -18,6 +24,8 @@ int valNum(int num){
 	}
 	return -1;
 }
+
+
 
 char **lectura (int nramdon){
 	char **pokemenu=(char **)malloc(NUMBER);
@@ -61,6 +69,8 @@ int **pokemones(char **lectura, char **pokemons,char **tipos){
 			   }
 		 }
 	}
+	p="Salir";
+	pokemons[10]=p;
 	return 0;
 
 }
@@ -89,10 +99,9 @@ int batalla(int vidaA,int vidaD, int ataqueA, int ataqueD,char* pokeA,char* poke
 
 
 int main(int argc, char **argv){
-
+	char error[]="\nError,por favor ingrese un número válido(1 al 11): ";
 	char ingreso1[]="\nIngrese el número del primer Pokémon para el combate: ";
 	char ingreso2[]="\nIngrese el número del segundo Pokémon para el combate: ";
-	char error[]="\nError,por favor ingrese un número válido(1 al 4): ";
 	int nramdon,nPoke1,nPoke2;
 	char* tipoP1;
 	char* tipoP2;
@@ -133,22 +142,31 @@ nramdon = rand()%(99-1+1) + 1;
 char **leer=lectura(nramdon);
 
 pokemones(leer,pokemons,tipos);
-for(int i=0;i<10;i++) printf("%d. %s\n",i+1,pokemons[i]);
-
+for(int i=0;i<11;i++) printf("%d. %s\n",i+1,pokemons[i]);
 
 printf("%s",ingreso1);
 scanf("%d",&nPoke1);
-while((valOpcion(nPoke1)==0)){
+if(nPoke1==11){ 
+	printf("Saliendo...\n");
+	return 0;	
+}
+while((valOpcion(nPoke1)==0) ){
 	printf("%s",error);
 	scanf("%d",&nPoke1);
 }
+
 printf("%s",ingreso2);
 scanf("%d",&nPoke2);
 
+if(nPoke2==11){ 
+	printf("Saliendo...\n");
+	return 0;	
+}
 while((valOpcion(nPoke2)==0) ){
 	printf("%s",error);
 	scanf("%d",&nPoke2);
 }
+
 poke1= pokemons[nPoke1-1];
 poke2= pokemons[nPoke2-1];
 tipoP1=tipos[nPoke1-1];
@@ -159,19 +177,22 @@ int ataqueP1=PokeAttack[tipo2][tipo1];
 int ataqueP2=PokeAttack[tipo1][tipo2];
 ataqueP1=base*ataqueP1;
 ataqueP2=base*ataqueP2;
-printf("\nt:%s a:%d ",tipoP1,ataqueP1);
-printf("\nt:%s a:%d ",tipoP2,ataqueP2);
+//printf("\nt:%s a:%d ",tipoP1,ataqueP1);
+//printf("\nt:%s a:%d ",tipoP2,ataqueP2);
 
 //batalla
-printf("\n%s vs %s",poke1,poke2);
+printf("\nCombatientes: %s vs %s\n",poke1,poke2);
 
 while(vidaP2!=0 && vidaP1!=0){
 vidaP2=batalla(vidaP1,vidaP2, ataqueP1,ataqueP2, poke1, poke2);
+if(vidaP2==0){
+		printf("\n¡%s es el ganador!\n",poke2);
+		return 0;
+		}
 vidaP1=batalla(vidaP2,vidaP1, ataqueP2,ataqueP1, poke2, poke1);
-}
-if(vidaP1==0){
-	printf("¡%s es el ganador!",poke2);
-}else{
-printf("¡%s es el ganador!",poke1);
-}
+	if(vidaP1==0){
+		printf("\n¡%s es el ganador!\n",poke2);
+		return 0;
+		}
+	}
 }
