@@ -86,8 +86,10 @@ int posicionSkin(char* Pokeskin[18],char* tipo){
 
 int batalla(int vidaA,int vidaD, int ataqueA, int ataqueD,char* pokeA,char* pokeD,int formato){
 	printf("\n\n %s:Vida:%d Ataque:%d ataca a %s: Vida: %d Ataque: %d",pokeA,vidaA,ataqueA,pokeD,vidaD,ataqueD);
+	printf("\n resultado del ataque");
+
 	vidaD=vidaD-ataqueA;
-	if(vidaD<0){
+	if(vidaD<1){
 		vidaD=0;
 	}
 	
@@ -99,7 +101,7 @@ int batalla(int vidaA,int vidaD, int ataqueA, int ataqueD,char* pokeA,char* poke
 	}else{
 		printf("\n %s:Vida:%d Ataque:%d ",pokeD,vidaD,ataqueD);
 	    printf("\n %s:Vida:%d Ataque:%d ",pokeA,vidaA,ataqueA);
-		return vidaA;
+		return vidaD;
 	}
     return -1;
 }
@@ -138,7 +140,7 @@ float PokeAttack[18][18] = {{1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1},
 			{1,1,1,1,1,1,1,1,0.5,1,1,1,1,1,1,2,1,0},
 			{1,0.5,1,1,1,1,1,2,1,1,1,1,1,2,1,1,0.5,0.5},
 			{1,2,1,0.5,1,1,1,1,0.5,0.5,1,1,1,1,1,2,2,1}};
-char* Pokeskin[18] ={"normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fary"};
+char* Pokeskin[18] ={"normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy"};
 
 	
 
@@ -184,12 +186,15 @@ float ataqueP1=PokeAttack[tipo1][tipo2];
 float ataqueP2=PokeAttack[tipo2][tipo1];
 ataqueP1=base*ataqueP1;
 ataqueP2=base*ataqueP2;
-printf("\nt:%s a:%f ",tipoP1,ataqueP1);
-printf("\nt:%s a:%f ",tipoP2,ataqueP2);
+//printf("\nt:%s a:%f ",tipoP1,ataqueP1);
+//printf("\nt:%s a:%f ",tipoP2,ataqueP2);
 
 //batalla
 printf("\nCombatientes: %s vs %s\n",poke1,poke2);
-
+if(ataqueP1==0 && ataqueP2==0){
+  printf("\n¡Los pokemons no son compatibles para luchar!\n");
+  return 0;
+}
 while(vidaP2!=0 && vidaP1!=0){
 vidaP2=batalla(vidaP1,vidaP2, ataqueP1,ataqueP2, poke1, poke2,0);
 if(vidaP2==0){
