@@ -1,0 +1,8 @@
+random:
+    li $a1, 99 #setear el maximo valor
+    li $v0, 42 #genera el numero random, 42 es la llamada
+    syscall
+    move $v0, $a0
+    li $v0, 1  #imprime el valor en v0
+   # jr $ra
+   syscall
