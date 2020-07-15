@@ -1,13 +1,13 @@
 # Leer un archivo. 
 
         .data
-fout:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
 buffer: .space 1024
         .text
 
 main:
 
-  la $a0, fout
+  la $a0, file
   jal read
   
   la $a0, ($v0)
@@ -28,7 +28,7 @@ read:
  #Aqui lo lee
   li $v0, 14       # instruccion para leer en v0
   la $a1, buffer   # direccionamiento del buffer
-  li $a2, 1024    
+  li $a2, 1024     
   move $a0, $t1    # direcciona el fd en a0		
   syscall          
 
@@ -38,5 +38,5 @@ read:
   move $a0, $t1   # redirrecciona el fd a a0
   syscall         
 
-  la $v0, buffer #carga en v0
+  la $v0, buffer 
   jr $ra

@@ -1,0 +1,42 @@
+.data
+	matriz:      .float 1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1
+    	       	     .float 2,1,0.5,0.5,1,2,0.5,0,2,1,1,1,1,0.5,2,1,2,0.5
+    	             .float 1,2,1,1,1,0.5,2,1,0.5,1,1,2,0.5,1,1,1,1,1
+    	             .float 1,1,1,0.5,0.5,0.5,1,0.5,0,1,1,2,1,1,1,1,1,2
+	nroColumnas: .word 18
+	.eqv lenDato 4 #cant que representa el dato guardado
+	space: .ascii " "
+	salto: .ascii "\n"
+.text
+	GenMatriz:
+		la $s0, matriz
+		lw $s1,nroColumnas
+		
+		add $t0, $zero, 0 
+		bucleFila:
+			mul $t1, $t0, $s1
+			
+			add $t2, $zero, 0 
+			bucleCol: 
+				addi $t3,$t1,0
+				add $t3, $t3,$t2
+				mul $t3, $t3, lenDato
+				add $t4, $t3, $s0
+			
+			lw $s3, ($t4)
+			add $t4, $s3, 0
+			
+			move $a0, $t4
+			li $v0,1
+			syscall
+			li $v0, 4
+			la $a0, space
+			syscall
+			
+			addi $t2, $t2, 1
+			blt $t2,$s1, bucleCol
+			li $v0, 4
+			la $a0, salto
+			syscall
+			addi $t0,$t0,1
+			blt $t0,$s1, bucleFila
