@@ -22,22 +22,23 @@ main:
 	add $t3,$v0,0
 	#li $v0, 1
 	# syscall
-	#jal lectura
+	
 	jal entrada
-	 #Print int de usuario
         move $t0, $v0   #t0:poke1
-        jal entrada
-        move $t1, $v0   #t0:poke2
-        #imprir entrada 1
-        li $v0, 1
+        move $t1, $t0	#mueve las entradas a t3 para validar la opcion de salida
+        jal salida 
+        #imprir entrada 1(temporal)
+ 	li $v0, 1
         move $a0, $t0
         syscall
         
-         #imprir entrada 2
+        jal entrada
+        move $t1, $v0   #t1:poke2
+        jal salida 
+        #imprir entrada 2(temporal)
         li $v0, 1
         move $a0, $t1
         syscall
-                
         
 	jal end
 random:
@@ -107,7 +108,23 @@ entrada:
         li $v0, 5
         syscall
         jr $ra
-
+salida:
+        addi $sp, $sp, -12 
+    	sw $ra,8($sp)
+    	sw $t1,4($sp)
+    	sw $t0,0($sp)
+    	#---------------
+	addi $t0,$zero,11
+	slt $t0,$t1,$t0
+	#addi $t1,$t1,1
+	beq $t0, 1,exit
+	#---------------
+	lw $t0,0($sp)
+	lw $t1,4($sp)
+	lw $ra,8($sp)
+        addi $sp, $sp, 12
+	jal end
+	exit:  jr $ra
 end:
 	li $v0, 10
 	syscall
