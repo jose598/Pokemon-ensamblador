@@ -1,26 +1,13 @@
-.data 
-text1: .asciiz "Bienvenido al sistema de combates Pokémon "
-newLine: .asciiz "\n"
+# Leer un archivo. 
+
+        .data
 file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
 buffer: .space 1024
-
-	.globl main
-	.text
+bufferReal: .space 255
+newLine: .asciiz "\n"
+        .text
 
 main:
-	li $v0, 4
-	la $a0, text1
-	syscall
-	li $v0, 4
-	la $a0, newLine
-	syscall
-	jal lectura
-	la $a0, ($v0)
-  	li $v0, 4
-	jal end
-	
-    	
-lectura:
 
   la $a0, file
   jal read
@@ -53,9 +40,7 @@ read:
 la $a0,buffer
   lb $t7,($a0)
   beq $t7,10,salto
- # jal random 
- #  move $t5,$v0
-  add $t5,$zero,3
+  addi $t5,$zero,3
   slt $t5,$t6,$t5
   beq $t5,0,imprimir
  #beq $t6,3,imprimir  #random
@@ -80,21 +65,8 @@ saltoLine:
 	syscall
 	 beq $t6,7,end
  	j readLine
+end:
+ 	li $v0,10
+ 	syscall
 	
   #jr $ra
-
-  
-random:
-    addi $sp, $sp, -4 
-    sw $ra, 0($sp)
-    li $a1, 99 #setear el maximo valor
-    li $v0, 42 #genera el numero random
-    syscall
-    move $v0, $a0
-    lw $ra, 0($sp)	
-    addi $sp, $sp, 4
-    jr $ra
-
- end:
- 	li $v0,10
- 	syscall 
