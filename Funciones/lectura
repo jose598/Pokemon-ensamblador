@@ -1,7 +1,12 @@
 # Leer un archivo. 
 
         .data
-file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+#file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+file:   .asciiz "C:\\Users\\TASHZ\\Desktop\\Pokemon-ensamblador\\pokeTypes.txt" 
+esp:    .space 80
+esp2:    .space 80
+newline: .asciiz "\n"
+str:  .asciiz "Hello,World"
 buffer: .space 1024
         .text
 
@@ -28,6 +33,7 @@ sub $sp, $sp, 4 # allocate memory in stack to strore 4 bytes
   li $a1, 0        # bandera
   syscall          # abre el archivo... fd en v0
 
+<<<<<<< HEAD
   move $t1, $v0    
   la  $a1, 10
   li  $a2, 0	
@@ -53,7 +59,62 @@ sub $sp, $sp, 4 # allocate memory in stack to strore 4 bytes
    		 	# sb  $zero, ($a1)
    		 	
           
+=======
+  move $t1, $v0 	
+  
+ #Aqui lo lee
+ la $t5, esp
+ la $t6, esp2
+  li $v0, 14       # instruccion para leer en v0
+  #move $a0,$t1	
+  la $a1, buffer   # direccionamiento del buffer
+  li $a2, 17
+  syscall
+ move $t1,$v0 
+ #li $v0,4
+ #syscall  
+ la $t0, ($t1)
+  li $t2, 0    # $t1 is the counter. set it to 0  
+  la $t3, 44   # 43 is ASCII of ',' in DEC
+  countChr:  
+  # add $t0, $a1, $t2
+     la $t4, ($t0)      # Load the first byte from address in $t0 
+   #  la $a0, ($t0)
+    #li $v0,4
+    #syscall 
+   
+     beqz $t4, end       # if $t4 == 0 then go to label end
+     beq $t4, $t3, sum   # branch if symbol equals 43 (+)
+     sb  $t4,0($t5)      # add to output
+     addi $t5,$t5,1      # advance output pointer 
+     add $t0, $t0,1      # else increment the address 
+     add $t2, $t2, 1     # and increment the counter of course 
+     j countChr    
+ sum:
+    add $t0, $t0,1 
+ proceed:
+    lb $t4, 0($t0)  # Load the first byte from address in $t0  
+    beqz $t4, end   # if $t2 == 0 then go to label end 
+    sb      $t4,0($t6)              # add to output
+    addi    $t6,$t6,1               # advance output pointer  	
+    add $t0, $t0,1      # else increment the address  
+    add $t2, $t2, 1 # and increment the counter of course  
+    j proceed
+ end:  
+    la $a0,esp
+    li $v0,4
+    syscall
+    
+    li $v0, 4       # you can call it your way as well with addi 
+    la $a0, newline       # load address of the string
+    syscall
+    
+    la      $a0,esp2
+    li      $v0,4
+    syscall
+>>>>>>> d711db2998afa72a5c0d10f85f69d53ec0a100f1
 
+       
 
 #Aqui lo cierra
   li $v0, 16       # intruccion para cerrar
@@ -61,6 +122,7 @@ sub $sp, $sp, 4 # allocate memory in stack to strore 4 bytes
   syscall         
 
   la $v0, buffer 
+<<<<<<< HEAD
  lw  $ra, ($sp)
  addi $sp, $sp, 4 # allocate memory in stack to strore 4 bytes
   jr $ra
@@ -83,3 +145,6 @@ strrep_end:
  
 
     	
+=======
+  jr $ra
+>>>>>>> d711db2998afa72a5c0d10f85f69d53ec0a100f1
