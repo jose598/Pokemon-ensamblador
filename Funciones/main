@@ -1,17 +1,10 @@
 .data 
-<<<<<<< HEAD
 text1: .asciiz "Bienvenido al sistema de combates Pokémon "
-newLine: .asciiz "\n"
-file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
-=======
-bienvenido: .asciiz "Bienvenido al sistema de combates Pokémon "
 poke1:  .asciiz "\nIngrese el numero del primer Pokemon para el combate: "
 poke2:  .asciiz "\nIngrese el numero del segundo Pokemon para el combate: "
-newLine: .ascii "\n"
-#file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
-file:   .asciiz "C:\\Users\\TASHZ\\Desktop\\Pokemon-ensamblador\\pokeTypes.txt" 
-salto: .ascii "\n"
->>>>>>> d711db2998afa72a5c0d10f85f69d53ec0a100f1
+newLine: .asciiz "\n"
+file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+#file:   .asciiz "C:\\Users\\TASHZ\\Desktop\\Pokemon-ensamblador\\pokeTypes.txt" 
 buffer: .space 1024
 
 	.globl main
@@ -19,16 +12,12 @@ buffer: .space 1024
 
 main:
 	li $v0, 4
-	la $a0, bienvenido
+	la $a0, text1
 	syscall
 	li $v0, 4
 	la $a0, newLine
-	syscall
-<<<<<<< HEAD
-	jal lectura
-	la $a0, ($v0)
-  	li $v0, 4
-=======
+	syscall 
+	
 	jal random
 	add $t3,$v0,0
 	#li $v0, 1
@@ -36,6 +25,7 @@ main:
 	
         
         #ingresos
+        la $s0, poke1
 	jal entrada
         move $t0, $v0   #t0:npoke1
         move $t1, $t0	#mueve las entradas a t3 para validar la opcion de salida
@@ -44,7 +34,7 @@ main:
  	li $v0, 1
         move $a0, $t0
         syscall
-        
+        la $s0,poke2
         jal entrada
         move $t1, $v0   #t1:npoke2
         jal salida 
@@ -53,85 +43,23 @@ main:
         move $a0, $t1
         syscall
        
->>>>>>> d711db2998afa72a5c0d10f85f69d53ec0a100f1
 	jal end
 	
-    	
-lectura:
 
-  la $a0, file
-  jal read
-  
-  la $a0, ($v0)
-  li $v0, 4
-  syscall
-  
-  li $v0, 10
-  syscall
-
-read:
-#Aqui lo abre
-  li $v0, 13       # Aqui se abre el archivo
-  li $a1, 0        # bandera
-  syscall          # abre el archivo... fd en v0
-
-  move $t1, $v0  
-  li $t6,0
-  readLine:
- #Aqui lo lee
- 	li $v0, 14       # instruccion para leer en v0
- 	la $a1, buffer   # direccionamiento del buffer
- 	li $a2, 1
- 	move $a0, $t1    # direcciona el fd en a0		
- 	syscall 
- #beq $t7,255,end
- #beqz $v0,end
- 	         
-la $a0,buffer
-  lb $t7,($a0)
-  beq $t7,10,salto
- # jal random 
- #  move $t5,$v0
-  add $t5,$zero,3
-  slt $t5,$t6,$t5
-  beq $t5,0,imprimir
- #beq $t6,3,imprimir  #random
-  j readLine
-  
-<<<<<<< HEAD
-  imprimir:
-  la $a0,buffer
-  li $v0, 4
-  syscall
-  beq $t7,10,saltoLine
-  j readLine
- #b saltoLine
- 
-salto:
-	beq $t6,7,end
-	addi $t6,$t6,1
- j readLine
- 
-saltoLine:
-	li $v0, 4
-	la $a0, newLine
-=======
-  lw $a0,0($sp)
-  addi $sp, $sp, 8
-  jr $ra
 
 
 entrada:
 
 	#Print mensaje
         li $v0, 4
-        la $a0, poke1
+        move $a0, $s0
         syscall
 
         #Obtener int de usuario
         li $v0, 5
         syscall
         jr $ra
+
 salida:
         addi $sp, $sp, -8
     	sw $t1,4($sp)
@@ -146,16 +74,7 @@ salida:
         addi $sp, $sp, 8
 	jr $ra
 	exit:  jal end
-end:
-	li $v0, 10
->>>>>>> d711db2998afa72a5c0d10f85f69d53ec0a100f1
-	syscall
-	 beq $t6,7,end
- 	j readLine
-	
-  #jr $ra
 
-  
 random:
     addi $sp, $sp, -4 
     sw $ra, 0($sp)

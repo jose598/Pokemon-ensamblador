@@ -25,9 +25,7 @@ lectura:
   la $a0, file
   jal read
   
-  la $a0, ($v0)
-  li $v0, 4
-  syscall
+  
   
   li $v0, 10
   syscall
@@ -40,6 +38,7 @@ read:
 
   move $t1, $v0  
   li $t6,0
+  li $s7,7
   readLine:
  #Aqui lo lee
  	li $v0, 14       # instruccion para leer en v0
@@ -70,7 +69,8 @@ la $a0,buffer
  #b saltoLine
  
 salto:
-	beq $t6,7,end
+	
+	beq $t6,$s7,end
 	addi $t6,$t6,1
  j readLine
  
@@ -78,7 +78,7 @@ saltoLine:
 	li $v0, 4
 	la $a0, newLine
 	syscall
-	 beq $t6,7,end
+	 beq $t6,$s7,end
  	j readLine
 	
   #jr $ra
