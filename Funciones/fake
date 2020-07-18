@@ -1,5 +1,6 @@
 .data
-file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+#file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+file:   .asciiz "C:\\Users\\TASHZ\\Desktop\\mars\\Pokemon-ensamblador\\pokeTypes.txt"  
 esp:    .space 80
 esp2:    .space 80
 newline: .asciiz "\n"
@@ -53,7 +54,7 @@ buffer: .space 1024
  	separar:
  		la $t5, esp
  		la $t6, esp2
- 		la $t0, ($s0)  
+ 		la $t0, ($s0) 
    		li $t1, 0    
    		la $t3, 44   
  	countChr:  
