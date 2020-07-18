@@ -1,100 +1,232 @@
-.data 
-text1: .asciiz "Bienvenido al sistema de combates Pokémon "
-newLine: .asciiz "\n"
+.data
 file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
-buffer: .space 1024
+esp:    .space 80
+esp2:    .space 80
 
-	.globl main
-	.text
+newline: .asciiz "\n"
+buffer: .space 1730
 
-main:
-	li $v0, 4
-	la $a0, text1
-	syscall
-	li $v0, 4
-	la $a0, newLine
-	syscall
-	jal lectura
-	la $a0, ($v0)
-  	li $v0, 4
-	jal end
+matriz: .space 500
+prueba1: .space 100
+prueba2: .space 100
+
+
+hola: .asciiz "Hola,mundo"
+
+
+.text
+
+	main:
+	#la $s3, 10  # codigo de salto de linea. 
+	li $s4,0 #contador de Lineas
+	#addi $t6,$zero, 5 #random
 	
+	jal open
+  	move $t1, $v0 
+ 	jal read
+  	jal close
+  	jal imprimirArreglo
+  	jal separar
+  	
+ 	open:
+ 		addi $sp,$sp,-4
+ 		sw $ra,($sp)
+ 		
+ 		la $a0, file
+		li $v0, 13       # Aqui se abre el archivo
+ 		li $a1, 0        # bandera
+ 		syscall 
+ 		
+ 		lw $ra,($sp)
+ 		addi $sp,$sp,4
+ 		jr $ra  
+ 		
+ 	read:
+ 		addi $sp,$sp,-12
+ 		sw $ra,($sp)
+ 		sw $s7,4($sp)
+ 		sw $t7,8($sp)
+ 		
+ 		li $s7,0
+ 		li $t7,0
+ 		addi $s5,$zero,1 # random - 1aqui va el random     #s5 inicio de la linea
+ 		addi $s6,$s5,2 #hasta aqui llega el random #s6 aqui acaba
+ 		addi $s4,$zero,0 #hasta aqui llega el random #s6 aqui acaba
+ 		la $s3,prueba1 #arrelo para una linea
+ 		jal leer
+ 		
+ 		regreso:
+ 			lw $ra,($sp)
+ 			lw $s7,4($sp)
+ 			lw $t7,8($sp)
+ 			addi $sp,$sp,12
+ 			jr $ra  
+ 		leer:
+ 			
+ 			li $v0, 14       # instruccion para leer en v0
+ 			la $a1, buffer   # direccionamiento del buffer
+ 			li $a2, 1 #tamano de esa linea
+ 			move $a0, $t1    # direcciona el fd en a0		
+ 			syscall 
+ 			la $s0,buffer
+ 			move $a3,$s0
+ 		
+ 		comprobar:
+ 		
+ 			slt $t0,$s4,$s5# el 5 es el random
+ 			beq $t0,0,imprimir
+ 			
+ 		chequeo:
+ 			lb $t3,($a3)
+ 			la $t0,10
+ 			beq $t3,$t0,salto
+ 			b leer
+ 			
+ 		salto:
+ 			addi $s4,$s4,1
+			slt $t0,$s4,$s5 
+ 			beq $t0,1,leer
+ 			slt $t0,$s4,$s6
+ 			beq $t0,0,leer
+ 		imprimir:
+ 			
+ 			slt $t0,$s4,$s6
+ 			beq $t0,0,regreso
+ 			move $a0,$s7
+ 			#lb $t6,($s0)
+ 			la $t0,10
+ 			lb $t3,($a3)
+ 			beq $t3,$t0,sum
+ 			
+ 			
+ 			
+ 			la $a0,($s7)
+ 			la $a1,($a3)
+ 			jal guardarPrueba
+ 			addi $s7,$s7,1
+ 			b chequeo
+ 		sum:
+ 			addi $s4,$s4,1
+ 			b leer
+ 			
+ 			#jal guardarMatriz
+ 			
+ 			#guardando en el arreglo
+ 	
+ 			
+ 		
+ 	guardarPrueba:
+ 		addi $sp,$sp,-20
+ 		sw $ra,($sp)
+ 		sw $s7,4($sp)
+ 		sw $t3,8($sp)
+ 		sw $t1,12($sp)
+ 		sw $s0,16($sp)
+ 		
+ 		
+ 		move $s7,$a0
+ 		lb $s0,($a1)
+ 		
+ 		#la $t0,prueba1
+ 		addu $t2,$s3,$s7
+ 		sb $t3,0($t2)
+ 		beqz $t3,fi
+ 		
+   		fi:
+   		lw $ra,($sp)
+   		lw $s7,4($sp)
+   		lw $t3,8($sp)
+   		lw $t1,12($sp)
+   		lw $s0,16($sp)
+ 		addi $sp,$sp,20
+ 		jr $ra
+ 		
+ 	imprimirArreglo:
+ 		addi $sp,$sp,-12
+ 		sw $ra,($sp)
+ 		sw $t0,4($sp)
+ 		sw $a0,8($sp)
+ 		
+ 		
+ 		addi $s0,$zero,0
+ 		loop:
+ 			la $t0,prueba1
+ 			addu $t2,$t0,$s0
+ 			lbu $t3,0($t2)
+ 			beqz $t3,fin
+ 			
+ 			cuerpo:
+ 				addiu $s0,$s0,1
+ 				b loop
+ 		fin:
+ 		lw $ra,($sp)
+ 		lw $t0,4($sp)
+ 		lw $a0,8($sp)
+ 		addi $sp,$sp,12
+ 		jr $ra
+ 		
+ 		
+ 	close:
+ 		addi $sp,$sp,-4
+ 		sw $ra,($sp)
+ 		
+ 		li $v0,16
+  		move $a0,$t1
+ 		syscall
+ 		
+ 		lw $ra,($sp)
+ 		addi $sp,$sp,4
+ 		jr $ra
+ 		
+ 	
+ 	separar:
+ 		la $s0,prueba1
+ 		la $t5, esp
+ 		la $t6, esp2
+ 		la $t0, ($s0)  
+   		li $t1, 0    
+   		la $t3, 44   
+ 	countChr:  
+   		 lb $t2, 0($t0)  
+   		 beqz $t2, final  
+   		 beq $t2, $t3, suma
+   		 sb      $t2,0($t5)              # add to output
+   		 addi    $t5,$t5,1               # advance output pointer  	
+   		 #add $t0, $t0,1}
+   		 add $t0, $t0,1      # else increment the address  
+    		 add $t1, $t1, 1 # and increment the counter of course  
+   		 j countChr
+	suma:
+    		add $t0, $t0,1 
+	proceed:
+    		lb $t2, 0($t0)  # Load the first byte from address in $t0  
+   		beqz $t2, final   # if $t2 == 0 then go to label end 
+    		sb      $t2,0($t6)              # add to output
+    		addi    $t6,$t6,1               # advance output pointer  	
+
+    	        add $t0, $t0,1      # else increment the address  
+    		add $t1, $t1, 1 # and increment the counter of course  
+    		j proceed
+
+ 	final:  
+    # Do whatever you want here.  
+    # Just remember that the length of the string is stored in $t1
+    # Here you have the position of '+' saved to t4 
+    
+   	 la $a0,esp
+    	 li $v0,4
+    	syscall
     	
-lectura:
-
-  la $a0, file
-  jal read
-  
-  
-  
-  li $v0, 10
-  syscall
-
-read:
-#Aqui lo abre
-  li $v0, 13       # Aqui se abre el archivo
-  li $a1, 0        # bandera
-  syscall          # abre el archivo... fd en v0
-
-  move $t1, $v0  
-  li $t6,0
-  li $s7,7
-  readLine:
- #Aqui lo lee
- 	li $v0, 14       # instruccion para leer en v0
- 	la $a1, buffer   # direccionamiento del buffer
- 	li $a2, 1
- 	move $a0, $t1    # direcciona el fd en a0		
- 	syscall 
- #beq $t7,255,end
- #beqz $v0,end
- 	         
-la $a0,buffer
-  lb $t7,($a0)
-  beq $t7,10,salto
- # jal random 
- #  move $t5,$v0
-  add $t5,$zero,3
-  slt $t5,$t6,$t5
-  beq $t5,0,imprimir
- #beq $t6,3,imprimir  #random
-  j readLine
-  
-  imprimir:
-  la $a0,buffer
-  li $v0, 4
-  syscall
-  beq $t7,10,saltoLine
-  j readLine
- #b saltoLine
- 
-salto:
-	
-	beq $t6,$s7,end
-	addi $t6,$t6,1
- j readLine
- 
-saltoLine:
-	li $v0, 4
-	la $a0, newLine
-	syscall
-	 beq $t6,$s7,end
- 	j readLine
-	
-  #jr $ra
-
-  
-random:
-    addi $sp, $sp, -4 
-    sw $ra, 0($sp)
-    li $a1, 99 #setear el maximo valor
-    li $v0, 42 #genera el numero random
-    syscall
-    move $v0, $a0
-    lw $ra, 0($sp)	
-    addi $sp, $sp, 4
-    jr $ra
-
- end:
- 	li $v0,10
- 	syscall 
+    	li $v0, 4       # you can call it your way as well with addi 
+    	la $a0, newline       # load address of the string
+    	syscall
+    
+    	la      $a0,esp2
+    	li      $v0,4
+    	syscall
+			
+ 	salir:
+ 		li $v0,10
+ 		syscall
+   			
+ 		

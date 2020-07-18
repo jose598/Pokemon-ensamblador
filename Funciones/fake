@@ -30,7 +30,7 @@ buffer: .space 1024
  		
  		li $v0, 14       # instruccion para leer en v0
  		la $a1, buffer   # direccionamiento del buffer
- 		li $a2, 31  #tamano de esa linea
+ 		li $a2, 15  #tamano de esa linea
  		move $a0, $t1    # direcciona el fd en a0		
  		syscall 
  		la $v0,buffer

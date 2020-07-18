@@ -1,8 +1,8 @@
 # Leer un archivo. 
 
         .data
-#file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
-file:   .asciiz "C:\\Users\\TASHZ\\Desktop\\Pokemon-ensamblador\\pokeTypes.txt" 
+file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+#file:   .asciiz "C:\\Users\\TASHZ\\Desktop\\Pokemon-ensamblador\\pokeTypes.txt" 
 esp:    .space 80
 esp2:    .space 80
 newline: .asciiz "\n"
@@ -12,8 +12,7 @@ buffer: .space 1024
 
 main:
   sub $sp, $sp, 4 # allocate memory in stack to strore 4 bytes
-  
-  
+   
   sw  $ra, ($sp)
   la $a0, file
   jal read
