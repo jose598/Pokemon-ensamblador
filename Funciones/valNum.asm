@@ -2,10 +2,10 @@
 text: .asciiz "h"
 num: .space 4
 
-	.globl main
+	.globl mainV
 	.text
 
-main:
+mainV:
     la $s0,text
     #li $s0,4
 while:

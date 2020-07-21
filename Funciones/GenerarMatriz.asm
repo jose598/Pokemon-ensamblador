@@ -47,7 +47,7 @@ salto: .asciiz "\n"
 
 .text
 
-main:	
+mainG:	
 #j leematriz
 j leearreglo
 j end
@@ -159,13 +159,9 @@ lend:
 
 end:	
 	la $a0,indextipo1
-	lb $a0,($a0)
-	li $v0, 1
-	syscall
+	
 	
 	la $a0,indextipo2
-	lb $a0,($a0)
-	li $v0, 1
-	syscall
+	
 	li $v0, 10
 	syscall	

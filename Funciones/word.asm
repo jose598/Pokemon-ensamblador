@@ -24,9 +24,9 @@ vidap2: .word 5
 
 .text
     
-.globl main
+.globl mainW
 
-main:
+mainW:
 #
 	la $s1,base 
 	la $s2,ataquep1

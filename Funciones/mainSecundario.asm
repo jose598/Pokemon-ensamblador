@@ -1,4 +1,7 @@
+
+
 .data
+
 file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
 
 poke1:    .space 50
@@ -22,7 +25,7 @@ poke10: .space 50
 tipo9:    .space 50
 tipo10: .space 50
 
-newline: .asciiz "\n"
+
 buffer: .space 1730
 
 linea1: .space 100
@@ -42,25 +45,34 @@ matrizTipos: .word tipo1,tipo2, tipo3, tipo4, tipo5, tipo6, tipo7, tipo8, tipo9,
 
 
 .text
+	.globl mainSecundario
 
-.globl main
 
-	main:
+
+mainSecundario:
+	
+	addi $sp,$sp,-8
+	sw $ra,($sp)
+	sw $s0,4($sp)
 	
 	jal random
   	move $s0,$v0
 	jal open
 	move $a1, $v0 # le paso el fd
  	move $a0,$s0#le paso el random
- 	#move $a1,$s1#le paso el fd
  	jal read
  	jal close
- 	
  	jal separarLinea
-  	jal salir
+ 	
+ 	la $v0, matrizPokemon
+	la $v1, matrizTipos
+	
+  	lw $ra,($sp)
+	lw $s0,4($sp)
+  	addi $sp,$sp,8
+	jr $ra
   	
-  	
- 	open:
+  	 open:
  		addi $sp,$sp,-12
  		sw $ra,($sp)
  		sw $a0,4($sp)
@@ -75,7 +87,7 @@ matrizTipos: .word tipo1,tipo2, tipo3, tipo4, tipo5, tipo6, tipo7, tipo8, tipo9,
  		lw $a0,4($sp)
  		lw $a1,8($sp)
  		addi $sp,$sp,12
- 		jr $ra  
+ 		jr $ra 
  	
  	read:
  		addi $sp,$sp,-36
@@ -137,6 +149,8 @@ matrizTipos: .word tipo1,tipo2, tipo3, tipo4, tipo5, tipo6, tipo7, tipo8, tipo9,
  				b leer
  			seguir:
  				la $t0,13
+ 				beq $t3,$t0,return
+ 				la $t0,9
  				beq $t3,$t0,return
  				move $a0,$s2 #n. lineas
  				move $a1,$s7 #contador
@@ -426,8 +440,6 @@ matrizTipos: .word tipo1,tipo2, tipo3, tipo4, tipo5, tipo6, tipo7, tipo8, tipo9,
  		jr $ra
  		
  		
- 		
- 		
    	
    	random:
    		  addi $sp,$sp,-8
@@ -441,78 +453,13 @@ matrizTipos: .word tipo1,tipo2, tipo3, tipo4, tipo5, tipo6, tipo7, tipo8, tipo9,
 		  lw $a1, 4($sp)
 		  addi $sp,$sp,8
 		  jr $ra
+		  
+		  
+	
+	
+		
+		  
 	
 	
 	
-	salir:
-		la $a0,poke1
-    		li $v0,4
-    		 syscall
-    		 
-    		la $a0,newline
-    		 li $v0,4
-    		 syscall
-    		 
-    		la $a0,poke2
-    		 li $v0,4
-    		 syscall
-    		 la $a0,newline
-    		 li $v0,4
-    		 syscall
-		la $a0,poke3
-    		li $v0,4
-    		 syscall
-    		 
-    		la $a0,newline
-    		 li $v0,4
-    		 syscall
-    		 
-    		la $a0,poke4
-    		 li $v0,4
-    		 syscall
-    		 
-    		la $a0,newline
-    		 li $v0,4
-    		 syscall
-    		  
-    		la $a0,poke5
-    		li $v0,4
-    		 syscall
-    		 
-    		la $a0,newline
-    		 li $v0,4
-    		 syscall
-    		 
-    		la $a0,poke6
-    		 li $v0,4
-    		 syscall
-    		 la $a0,newline
-    		 li $v0,4
-    		 syscall
-		la $a0,poke7
-    		li $v0,4
-    		 syscall
-    		 
-    		la $a0,newline
-    		 li $v0,4
-    		 syscall
-    		 
-    		la $a0,poke8
-    		 li $v0,4
-    		 syscall
-    		 la $a0,newline
-    		 li $v0,4
-    		 syscall
-    		la $a0,poke9
-    		li $v0,4
-    		 syscall
-    		 
-    		la $a0,newline
-    		 li $v0,4
-    		 syscall
-    		 
-    		la $a0,poke10
-    		 li $v0,4
-    		 syscall
-		li $v0,10
-		syscall
+		
