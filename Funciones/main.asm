@@ -57,18 +57,21 @@ opcionesEntradas:
         	li $v0, 4
         	move $a0, $s0
         	syscall
-
+        	
+		#li $v0, 5
+        	#syscall
+        	#move $a0, $v0
 		li $v0,8
 		la $a0, texto
 		li $a1, len
 		syscall
 		
-		la $a0, texto
-        	jal validarIngreso
-        	beq $v0,0,salirI
-        	
-       		
-  		move $a0, $t0
+		#la $a0, texto
+        	#jal validarIngreso
+        	#beq $v0,0,salirI
+        	la $a0, texto
+        	jal convertirEntero
+  		move $a0, $v0
         	jal valOpcion
         	move $s0,$v0
         	bne $s0,0,salir
