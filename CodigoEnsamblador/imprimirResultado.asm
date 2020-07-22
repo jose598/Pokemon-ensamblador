@@ -6,6 +6,8 @@ newline: .asciiz "\n"
 .text
 .globl imprimirResultado
 
+#Funcionalidad: Imprimir cada uno de los pokemones en el main prinicipal, 10 pokemones
+#Retorno: No hay retorno, solo imprime.
 imprimirResultado:
 		
 		addi $sp,$sp,-20
@@ -54,7 +56,6 @@ imprimirResultado:
 			la $a0, newline
 			li $v0, 4
 			syscall
-			
 			
 		ending:
 		lw $ra,($sp)

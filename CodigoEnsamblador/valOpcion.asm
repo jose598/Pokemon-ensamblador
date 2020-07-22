@@ -3,7 +3,8 @@
         .globl valOpcion
 		.text
 
-# La etiqueta main representa el punto de partida		
+# Funcionalidad: Verifica si el numero ingresado por el usuario ya convertido es valido (entre 1-10), no valido (todos, excepto los validos y el 11), salir en caso que sea 11
+#Retorno: 0 -- no valido 1 -- valido  2 -- salir		
  valOpcion:
  	addi $sp,$sp,-20
  	sw $ra,0($sp)
@@ -11,8 +12,7 @@
  	sw $t0,8($sp)
  	sw $t1,12($sp)
  	sw $t2,16($sp)
- 	#la $t0,($a0)
-  	add $s0,$zero,$a0  #valor a validar
+  	add $s0,$zero,$a0 
 	addi $t0,$zero,0 
 	addi $t1,$zero,1
 	addi $t2,$zero,12 

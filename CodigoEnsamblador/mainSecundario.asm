@@ -1,9 +1,7 @@
 
-
 .data
 
 file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
-
 poke1:    .space 50
 poke2: .space 50
 tipo1:    .space 50
@@ -48,7 +46,8 @@ matrizTipos: .word tipo1,tipo2, tipo3, tipo4, tipo5, tipo6, tipo7, tipo8, tipo9,
 	.globl mainSecundario
 
 
-
+# Funcionalidad: Trabaja en similitud a un main secundario para este archivo. 
+#Retorno: No retorna nada. 
 mainSecundario:
 	
 	addi $sp,$sp,-8
@@ -58,8 +57,8 @@ mainSecundario:
 	jal random
   	move $s0,$v0
 	jal open
-	move $a1, $v0 # le paso el fd
- 	move $a0,$s0#le paso el random
+	move $a1, $v0 
+ 	move $a0,$s0
  	jal read
  	jal close
  	jal separarLinea
@@ -71,7 +70,9 @@ mainSecundario:
 	lw $s0,4($sp)
   	addi $sp,$sp,8
 	jr $ra
-  	
+	
+  	# Funcionalidad: Abre el archivo
+  	# Retorno: devuelve el file descriptor
   	 open:
  		addi $sp,$sp,-12
  		sw $ra,($sp)
@@ -79,8 +80,8 @@ mainSecundario:
  		sw $a1,8($sp)
  		
  		la $a0, file
-		li $v0, 13       # Aqui se abre el archivo
- 		li $a1, 0        # bandera
+		li $v0, 13    
+ 		li $a1, 0       
  		syscall 
  		
  		lw $ra,($sp)
@@ -88,7 +89,8 @@ mainSecundario:
  		lw $a1,8($sp)
  		addi $sp,$sp,12
  		jr $ra 
- 	
+ 	#Funcionalidad: Lee el archivo correspondiente 
+ 	#Retorno: No retorna nada. 
  	read:
  		addi $sp,$sp,-36
  		sw $ra,($sp)
@@ -101,19 +103,19 @@ mainSecundario:
  		sw $s6,28($sp)
  		sw $t3,32($sp)
  		
- 		move $t1,$a1   #fd
+ 		move $t1,$a1  
  		add $s5,$zero, $a0
  		sub $s5,$s5,1
- 		li $s7,0 		#contador de caracter
- 		addi $s6,$s5,11		#hasta aqui llega el random #s6 aqui acaba
- 		addi $s4,$zero,0  	#N. lineas totales
- 		addi $s2,$zero,-1	#N. lineas guardadas
+ 		li $s7,0 		
+ 		addi $s6,$s5,11		
+ 		addi $s4,$zero,0  	
+ 		addi $s2,$zero,-1
  		
  		leer:
- 			li $v0, 14       # instruccion para leer en v0
- 			la $a1, buffer   # direccionamiento del buffer
- 			li $a2, 1 #tamano de esa linea
- 			move $a0, $t1    # direcciona el fd en a0		
+ 			li $v0, 14     
+ 			la $a1, buffer 
+ 			li $a2, 1
+ 			move $a0, $t1  	
  			syscall 
  			
  			la $a3,buffer
@@ -141,8 +143,6 @@ mainSecundario:
  			la $t0,10
  			lb $t3,($a3)
  			bne $t3,$t0,seguir  #\n
- 				#move $a0,$s2 #revisar esto
- 				#jal sumLinea
  				addi $s4,$s4,1
  				addi $s2,$s2,1
  				li $s7,0
@@ -153,13 +153,9 @@ mainSecundario:
  				la $t0,9 #\t
  				beq $t3,$t0,return
  				
- 				#move $a0,$t3
- 				#li $v0,4
- 				#syscall
- 				
- 				move $a0,$s2 #n. lineas
- 				move $a1,$s7 #contador
- 				move $a3,$t3 #valor
+ 				move $a0,$s2
+ 				move $a1,$s7 
+ 				move $a3,$t3 
  				jal guardacionOutput
  				addi $s7,$s7,1
  				b leer
@@ -181,9 +177,9 @@ mainSecundario:
  			
  			
  			
- 	
+ 	#Funcionalidad: Establece la linea en donde guardar el caracter en el espacio de la linea correspondiente.
+ 	# Resultado: No retorna, solo guarda en la linea correspondiente.
  	guardacionOutput:
- 			#
  			addi $sp,$sp, -20
  			sw $ra,($sp)
  			sw $s2,4($sp)
@@ -191,7 +187,7 @@ mainSecundario:
  			sw $t1,16($sp)
  			
  			
- 			move $t1,$a0 #No. lineas
+ 			move $t1,$a0
  			la $s3,($a3)
  			add $s2,$zero,$t1
  			beq $s2,0,primero
@@ -207,87 +203,84 @@ mainSecundario:
  			beqz $s2,else
  			
  			segundo:
- 				#sb $t1,($s7)
- 				#move $a0,$t1 #indice
- 				#li $a0,0
- 				move $a0,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea2 #output
+ 				move $a0,$a1 
+ 				move $a1, $s3
+ 				la $a2, linea2 
  				jal guardarPrueba
  				b else
  			primero:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea1 #output
+ 				add $a0,$zero,$a1 
+ 				move $a1, $s3
+ 				la $a2, linea1 
  				jal guardarPrueba
  				b else
  			tercero:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea3 #output
+ 				add $a0,$zero,$a1
+ 				move $a1, $s3
+ 				la $a2, linea3 
  				jal guardarPrueba
  				b else
  			cuarto:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea4 #output
+ 				add $a0,$zero,$a1
+ 				move $a1, $s3
+ 				la $a2, linea4
  				jal guardarPrueba
  				b else
  			quinto:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea5 #output
+ 				add $a0,$zero,$a1 
+ 				move $a1, $s3
+ 				la $a2, linea5 
  				jal guardarPrueba
  				b else
  			sexto:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea6 #output
+ 				add $a0,$zero,$a1 
+ 				move $a1, $s3
+ 				la $a2, linea6 
  				jal guardarPrueba
  				b else
  			septimo:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea7 #output
+ 				add $a0,$zero,$a1 
+ 				move $a1, $s3 
+ 				la $a2, linea7
  				jal guardarPrueba
  				b else
  			octavo:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea8 #output
+ 				add $a0,$zero,$a1 
+ 				move $a1, $s3 
+ 				la $a2, linea8 
  				jal guardarPrueba
  				b else
  			noveno:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea9 #output
+ 				add $a0,$zero,$a1 
+ 				move $a1, $s3
+ 				la $a2, linea9 
  				jal guardarPrueba
  				b else
  			decimo:
  				li $a0,0
- 				add $a0,$zero,$a1 #indice-contador
- 				move $a1, $s3 #valor
- 				la $a2, linea10 #output
+ 				add $a0,$zero,$a1 
+ 				move $a1, $s3 
+ 				la $a2, linea10 
  				jal guardarPrueba
  				b else
  			else:
  				lw $ra,($sp)
  				lw $s2,4($sp)
- 				#lw $s7,8($sp)
  				lw $s3,12($sp)
  				lw $t1,16($sp)
  				addi $sp,$sp,20
  				jr $ra
  				
- 				
+ 	#Guarda el caracter en la linea correspondiente.
+ 	#Retorno: Ninguno.		
  	guardarPrueba:
  		addi $sp,$sp,-24
  		sw $ra,($sp)
@@ -300,14 +293,14 @@ mainSecundario:
  		
  		la $s7,($a0)
  		add $t1,$zero,$s7
- 		move $s0,$a1 #valor
- 		move $s3,$a2 #output
+ 		move $s0,$a1 
+ 		move $s3,$a2
  		
  		
  		addu $t2,$s3,$s7
- 		#lb $t1,($t2)
  		sb $s0,0($t2)
  		beqz $s0,fi
+ 		
    		fi:
    		lw $ra,($sp)
    		lw $s7,4($sp)
@@ -318,7 +311,8 @@ mainSecundario:
  		addi $sp,$sp,24
  		jr $ra
  	
- 		
+ 	#Funcionalidad: Separa la linea que antes se guardo en dos partes, en las cuales son guardadas en el arreglo Tipos y Pokemons
+ 	#Retorno: Nignuno, solo hace de referencia.	
  	separarLinea:
  		addi $sp, $sp, -4
  		sw $ra, ($sp)
@@ -376,7 +370,8 @@ mainSecundario:
  		lw $ra, ($sp)
  		addi $sp, $sp, 4			
  	
- 	
+ 	#Funcionalidad: Separacion y retorno en cada uno de el .space pre indentificado
+ 	#Retorno: Dos palabras almacenadas en Tipos y Pokemons
  	separar:
  		addi $sp,$sp,-32
  		sw $ra,($sp)
@@ -388,33 +383,31 @@ mainSecundario:
  		sw $t2,24($sp)
  		sw $t1,28($sp)
  		
- 		move $t5, $a0 # poke
- 		move $t6, $a1 #tipo
- 		move $t0,$a2 #linea
- 		#lb $t0,($s0)
- 		#la $t0, str ="Hola,mundo"
+ 		move $t5, $a0
+ 		move $t6, $a1
+ 		move $t0,$a2 
    		li $t1, 0    
    		la $t3, 44   
  	countChr:  
  		lb $t2, 0($t0)  
    		 beqz $t2, final  
    		 beq $t2, $t3, suma
-   		 sb      $t2,0($t5)              # add to output
-   		 addi    $t5,$t5,1               # advance output pointer  	
-   		 #add $t0, $t0,1}
-   		 add $t0, $t0,1      # else increment the address  
-    		 add $t1, $t1, 1 # and increment the counter of course  
+   		 sb      $t2,0($t5)             
+   		 addi    $t5,$t5,1   
+   		 
+   		 add $t0, $t0,1     
+    		 add $t1, $t1, 1 
    		 b countChr
 	suma:
     		add $t0, $t0,1 
 	proceed:
-    		lb $t2, 0($t0)  # Load the first byte from address in $t0  
-   		beqz $t2, final   # if $t2 == 0 then go to label end 
-    		sb      $t2,0($t6)              # add to output
-    		addi    $t6,$t6,1               # advance output pointer  	
+    		lb $t2, 0($t0) 
+   		beqz $t2, final 
+    		sb      $t2,0($t6)     
+    		addi    $t6,$t6,1          	
 
-    	        add $t0, $t0,1      # else increment the address  
-    		add $t1, $t1, 1 # and increment the counter of course  
+    	        add $t0, $t0,1    
+    		add $t1, $t1, 1
     		b proceed
 
  	final:  
@@ -430,8 +423,8 @@ mainSecundario:
     		addi $sp,$sp,32
     		jr $ra	
  			
- 		
- 	
+ 	#Funcionalidad: Cierra el archivo
+ 	#Retorno: Devuelve el fd
  	close:
  		addi $sp,$sp,-4
  		sw $ra,($sp)
@@ -450,8 +443,8 @@ mainSecundario:
    		  addi $sp,$sp,-8
    		  sw $ra,($sp)
    		  sw $a1,4($sp)
-    		  li $a1, 99 #setear el maximo valor
-   	 	  li $v0, 42 #genera el numero random
+    		  li $a1, 99 
+   	 	  li $v0, 42
   		  syscall
 		  move $v0, $a0
 		  lw $ra, ($sp)

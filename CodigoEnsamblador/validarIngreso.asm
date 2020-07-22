@@ -1,6 +1,8 @@
 .text
 .globl validarIngreso
 
+#Funcionalidad: Comprobar que el texto ingresado por el usuario, sea un entero o un string
+#Retorno: 0 --- Caso de string 1 --- caso de Numero
 validarIngreso:
 
 		addi $sp, $sp, -20
@@ -43,9 +45,9 @@ validarIngreso:
 		lw $ra, 16($sp)
 		addi $sp, $sp, 20
 		jr $ra
-		
-		
-		
+			
+	#Funcionalidad: Compara con el codigo de ASCII el caracter correspondiente.
+	#Retorno: 0 -- no es un numero 1 -- es un numero
 	compararNumero:
 		addi $sp, $sp, -8
 		sw $ra, 0($sp)

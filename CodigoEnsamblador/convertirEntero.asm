@@ -2,6 +2,8 @@
 .text
 .globl convertirEntero
 
+# Funcionalidad: Transforma el string dado por el usuario a un entero, en el caso de haber pasado el filtro de validacion de numero.
+#Retorna: El numero convertido a entero.
 convertirEntero:
 		addi $sp, $sp, -52
 		sw $t0, ($sp)
@@ -18,24 +20,22 @@ convertirEntero:
 		sw $s3, 44($sp)
 		sw $t9, 48($sp)
 		
-		move $s0,$a0 # numeroString
+		move $s0,$a0 
 		b tomarLongitud
 	continuar:
 		li $t0,0
 		li $t9, 0
-		#move $s1, $s7
 		sub $s7,$s7,1
 	loop:
 		sle $t2, $t0, $s7
 		bne $t2, 1, validacionTerminada
 		add $t2, $s0, $t0
 		lb $s3, ($t2)		
-		addi $s3, $s3, -48  #a0
-		sub $s2, $s7, $t0 #a1
+		addi $s3, $s3, -48  
+		sub $s2, $s7, $t0 
 		
 		move $a0,$s3
-		move $a1,$s2   
-		#esrooo
+		move $a1,$s2  
 		jal multiplicacion
 		add $t9, $t9, $v0
 		addi $t0, $t0, 1
@@ -76,7 +76,8 @@ convertirEntero:
 		
 		
 		
-		
+#Funcionalidad: Multiplica la base por 10, de tal manera compararlo con el codigo ASCII
+#Retorna: El bit multiplicado por 10
 	multiplicacion:
 		addi $sp,$sp,-28
 		sw $ra,($sp)
@@ -87,7 +88,7 @@ convertirEntero:
 		sw $s4,20($sp)
 		sw $s5,24($sp)
 		
-		move $s4,$a1 # esotooo...
+		move $s4,$a1
 		move $s5,$a0
 		li $t7,10
 		li $t6,0
