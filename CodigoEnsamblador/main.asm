@@ -31,18 +31,42 @@ main:
         la $a2, poke1
         jal opcionesEntradas 
         bne $v0,1,end
-        move $a0,$v1
-        move $a1,$s1
+        
+        move $s7,$v1  #indice primer Pokemon
+        move $a0,$s7
+        move $a1,$s1   # matrizTipo
 	jal tomarTiposoPokemon
-	 
+	move $s5, $v0 #Tipo 1
+	
+	move $s7,$v1  #indice primero Pokemon
+        move $a0,$s7
+        move $a1,$s0   # matrizPokemon
+	jal tomarTiposoPokemon
+	move $s6, $v0 #pokemon 1
+		 
         la $a2,poke2
         jal opcionesEntradas
         bne $v0,1,end
-        move $a0,$v1  # eleccion
-         move $a1,$s1#matrizTipos
+        
+        move $s7,$v1  #indice segundo Pokemon
+        move $a0,$s7
+        move $a1,$s1   # matrizTipo
 	jal tomarTiposoPokemon
+	move $s4, $v0 #tipo 2
+	
+	move $s7,$v1  #indice segundo Pokemon
+        move $a0,$s7
+        move $a1,$s0   # matrizPokemon
+	jal tomarTiposoPokemon
+	move $s3, $v0 #pokemon 2
 	
 	
+	
+	#move $a0,$s5
+	#move $a1,$s6
+	#move $a2,$s4
+	#move $a3, $s3
+	jal MundoPoke
 	j end
 	
 	
@@ -58,20 +82,18 @@ opcionesEntradas:
         	move $a0, $s0
         	syscall
         	
-		#li $v0, 5
-        	#syscall
-        	#move $a0, $v0
 		li $v0,8
 		la $a0, texto
 		li $a1, len
 		syscall
 		
-		#la $a0, texto
-        	#jal validarIngreso
-        	#beq $v0,0,salirI
+		la $a0, texto
+        	jal validarIngreso
+        	beq $v0,0,salirI
         	la $a0, texto
         	jal convertirEntero
-  		move $a0, $v0
+        	move $t0,$v0
+  		move $a0, $t0
         	jal valOpcion
         	move $s0,$v0
         	bne $s0,0,salir
@@ -80,8 +102,8 @@ opcionesEntradas:
         	b  entrada
         	
         salir:
-        	move $v0,$s0
-        	move $v1,$t0
+        	move $v0,$s0	#bandera
+        	move $v1,$t0   #indice
         	lw $ra, ($sp)
 		lw $s0,4($sp)
 		lw $t0,8($sp)
@@ -99,7 +121,7 @@ tomarTiposoPokemon:
 	mul $t0,$t0,4
 	add $t1, $s0, $t0
 	lw $a0, 0($t1)
-	move $v0,$ra
+	move $v0,$a0
 	lw $ra, ($sp)
 	lw $s0,4($sp)
 	lw $t0,8($sp)

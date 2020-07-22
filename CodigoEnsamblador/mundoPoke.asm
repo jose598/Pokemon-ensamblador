@@ -47,8 +47,12 @@ Zero: .float 0.0
 base: .float 2
 vidap1: .word 5
 vidap2: .word 5
+#tipo1: .space 30
+#tipo2: .space 30
 tipo1:  .asciiz "fire" #quemado
 tipo2:  .asciiz "water" #quemado
+#poke1: .space 30
+#poke2: .space 30
 poke1:  .asciiz "Seviper"
 poke2:  .asciiz "Metagross"
 alertincomp: .asciiz "\n¡Los pokemons no son compatibles para luchar!\n"
@@ -67,6 +71,25 @@ newLine: .asciiz "\n"
 .globl MundoPoke
 
 MundoPoke:
+	#la $s0,tipo1
+	#la $s1,tipo2
+	#la $s2, poke1
+	#la $s7,poke2
+	#sb $a0,($s0)
+	#sb $a1,($s2)
+	#sb $a2,($s1)
+	#sb $a3,($s7)
+	
+	#lw $s0,($s0)
+	#move $a0,$s0
+	#li $v0,4
+	#syscall
+	
+	#move $a0,$s5  #tipo1
+	#move $a1,$s6 #
+	#move $a2,$s4
+	#move $a3, $s3
+	
 	jal leearreglo
 	jal leematriz
 	jal cardato_batalla

@@ -140,7 +140,7 @@ mainSecundario:
  			beq $t0,$0,regreso
  			la $t0,10
  			lb $t3,($a3)
- 			bne $t3,$t0,seguir
+ 			bne $t3,$t0,seguir  #\n
  				#move $a0,$s2 #revisar esto
  				#jal sumLinea
  				addi $s4,$s4,1
@@ -148,10 +148,15 @@ mainSecundario:
  				li $s7,0
  				b leer
  			seguir:
- 				la $t0,13
+ 				la $t0,13  # \r
  				beq $t3,$t0,return
- 				la $t0,9
+ 				la $t0,9 #\t
  				beq $t3,$t0,return
+ 				
+ 				#move $a0,$t3
+ 				#li $v0,4
+ 				#syscall
+ 				
  				move $a0,$s2 #n. lineas
  				move $a1,$s7 #contador
  				move $a3,$t3 #valor
