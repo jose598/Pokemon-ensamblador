@@ -47,14 +47,6 @@ Zero: .float 0.0
 base: .float 2
 vidap1: .word 5
 vidap2: .word 5
-#tipo1: .space 30
-#tipo2: .space 30
-tipo1:  .asciiz "fire" #quemado
-tipo2:  .asciiz "water" #quemado
-#poke1: .space 30
-#poke2: .space 30
-poke1:  .asciiz "Seviper"
-poke2:  .asciiz "Metagross"
 alertincomp: .asciiz "\n¡Los pokemons no son compatibles para luchar!\n"
 msjganador:    .asciiz "es el ganador!\n"
 msjresultado: .asciiz "\n resultado del ataque"
@@ -71,24 +63,6 @@ newLine: .asciiz "\n"
 .globl MundoPoke
 
 MundoPoke:
-	#la $s0,tipo1
-	#la $s1,tipo2
-	#la $s2, poke1
-	#la $s7,poke2
-	#sb $a0,($s0)
-	#sb $a1,($s2)
-	#sb $a2,($s1)
-	#sb $a3,($s7)
-	
-	#lw $s0,($s0)
-	#move $a0,$s0
-	#li $v0,4
-	#syscall
-	
-	#move $a0,$s5  #tipo1
-	#move $a1,$s6 #
-	#move $a2,$s4
-	#move $a3, $s3
 	
 	jal leearreglo
 	jal leematriz
@@ -98,6 +72,7 @@ MundoPoke:
 	jal inibatalla
 	jal batalla
 	j end
+	
 leearreglo:
 	addi $sp, $sp, -4
     	sw $ra,0($sp)
@@ -111,87 +86,71 @@ leematriz:
 	add $s2,$zero,$zero
 	j principal
 principal:
+	lw $s7, nroColumnas
 	addi $sp, $sp, -4
     	sw $ra,0($sp)
-	lw $s7, nroColumnas
-	mul $t4,$s7,$s7
 	add $t0, $zero, 0
-	add $t5, $zero, 0 #contador global
-	
+	add $t5, $zero, 0
+
 bucle1:
-	mul $t1, $t0, $s7 #cant de elementos
+	mul $t1, $t0, $s7
  	add $t6, $zero, 0
 bucle2:
 	addi $t2, $t1, 0
 	add $t2, $t2, $t6
 	mul $t2, $t2, longitudDato
 	add $t3, $t2, $s0
-	addi $t5, $t5, 1 #pare
-	beqz $s1,larreglo#leematriz
-	  	l.s $f3, ($t3)   
-          # l.s $f1,Zero
-	  # add.s $f12,$f3,$f1
-	   #li $v0, 2
-	   #syscall   
-	
-	 # beq $t5, $t4, end
-	  la $t9,indextipo2
-	  la $s4,indextipo1
-	  beq $s2,0,fataque
-	        la $t9,indextipo1
+	beqz $s1,larreglo
+	l.s $f3, ($t3)   
+	la $t9,indextipo2
+	la $s4,indextipo1
+	beq $s2,0,fataque
+		la $t9,indextipo1
 	  	la $s4,indextipo2
 	  	j fataque
-	
-	larreglo:#lee arreglo
+larreglo:
 		
 	 	lw $s3, ($t3)
 		add $t3, $s3, $zero
-		
-		#la $a0,($t3)
-		#li $v0, 4
-		#syscall
-		
 		jal compare
 		
 	continua:
 	beq $s2,2,re
 	addi $t6, $t6, 1
 	blt $t6, $s7, bucle2
-	#la $a0,salto
-	#li $v0, 4
-	#syscall
 	addi $t0, $t0, 1
 	blt $t0, $s7, bucle1
 
+
 compare:
 	addi $sp, $sp, -24
-    	sw $a0,0($sp)
+    	sw $s6,0($sp)
     	sw $a1,4($sp)
     	sw $ra,8($sp)
     	sw $t0,16($sp)
     	sw $t1,20($sp)
-	la $a0,($s3)
+	la $s6,($s3)
 	li $v0, 0
 	beqz $s2,compoke
-	   la $a1,tipo2#pokemon a comparar
+	   move $t7,$a2
 	   j comcontinua
 	compoke:
-	   la $a1,tipo1 #pokemon a comparar
+	 move   $t7,$a0
 	comcontinua:
 	jal loopc
 
-	lw $a0,0($sp)
-    	lw $a1,4($sp)
+	lw $s6,0($sp)
+    	lw $t7,4($sp)
     	lw $ra,8($sp)
     	lw $t0,16($sp)
     	lw $t1,20($sp)
         addi $sp, $sp, 24
 	jr $ra
 loopc:
-	lb $t0($a0)
-	lb $t1($a1)
-	add $a0, $a0, 1
-	add $a1, $a1, 1
+	lb $t0($s6)
+	lb $t1($t7)
+	add $s6, $s6, 1
+	add $t7, $t7, 1
 	beqz $t0, lend
 	beqz $t1, lend
 	bgt $t0, $t1, noigual
@@ -201,7 +160,6 @@ noigual:
 	
 	jr $ra
 igual:
-	#addi $t6,$t6,1 #indice de tipo
 	beq $s2,1,guarda
 	la $t8,indextipo1
 	sb $t6,($t8)
@@ -218,7 +176,6 @@ lend:
 Guardaindex:
 	la $a0,indextipo1
 	lb $a0,($a0)
-	
 	la $a0,indextipo2
 	lb $a0,($a0)
 	addi $s2,$s2,1 
@@ -247,15 +204,7 @@ fataque:
 		       j Guardaataque   
 Guardaataque:	
 	la $a0,Ataque1
-	l.s $f12,($a0)
-	li $v0, 2
-	syscall
-	
 	la $a0,Ataque2
-	l.s $f12,($a0)
-	li $v0, 2
-	syscall
-	
 	 jr $ra
 	
 cardato_batalla:
@@ -266,7 +215,7 @@ cardato_batalla:
 	la $s5,vidap2
 	lb $s4,($s4)
 	lb $s5,($s5)
-	add $t2,$zero,$zero #formato
+	add $t2,$zero,$zero 
 	jr $ra
 
 calbase: 
@@ -276,20 +225,19 @@ calbase:
 	cvt.w.s $f1, $f1
 	mfc1 $s2, $f0 
 	mfc1 $s3, $f1 
-	
 	jr $ra
 	
 pokeIncompatible:
 	addi $sp, $sp, -4
     	sw $ra,0($sp)
-	  beqz  $s2,imp1
-	  beqz  $s3,imp2
+	beqz  $s2,imp1
+	beqz  $s3,imp2
 	lw $ra,0($sp)
         addi $sp, $sp, 4
 	jr $ra
 imp1: 	
 	 beqz  $s3,escimcop
-	jr $ra
+	 jr $ra
 imp2:	
 	beqz  $s2,escimcop
 	jr $ra
@@ -302,18 +250,16 @@ escimcop:
 batalla: 
 	beqz $s4,endact
 	beqz $s5,endef
-	
-	
 	add $t4,$s2,$zero #atacante
 	add $t6,$s3,$zero #defensa
 	move $t5,$s4 #atacante
 	move $t3,$s5 #defensa
-	la $t7,poke1 #atacante nom
-	la $t8,poke2 #defensor nom
+	move $t7,$a1 #atacante nom
+	move $t8,$a3 #defensor nom
 	add $t2,$zero,$zero
 	jal atacar
 	move $s5,$t3
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
@@ -323,12 +269,12 @@ batalla:
 	add $t6,$s2,$zero #defensa
 	move $t5,$s5 #atacante
 	move $t3,$s4 #defensa
-	la $t7,poke2 #defensa nom
-	la $t8,poke1 #atacante nom
+	move $t7,$a3 #defensa nom
+	move $t8,$a1 #atacante nom
 	li $t2,1
 	jal atacar
 	move $s4,$t3
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
@@ -337,12 +283,12 @@ batalla:
 endef:	
 	bnez $s5,regreso
 	move $t1,$s5
-	la $t0,poke1
+	move $t0,$a1
 	jal ganador
 endact:
 	bnez  $s4,regreso
         move $t1,$s4
-        la $t0,poke2
+        move $t0,$a3
         jal ganador
 regreso:
 	jr $ra
@@ -352,38 +298,26 @@ atacar:
     	sw $t0,0($sp)
     	sw $t1,4($sp)
     	sw $ra,8($sp)
-    	#sw $t2,16($sp)
-#t7 nombre atacante
-#t5 vidadefesa 
-#t4 ataqueAtacante
-#t3 vidadefesa 
-#t6 ataquedefensa
-#t8 nombre defensa
 	jal preataque
-	sub $t3,$t3,$t4  #vidaD=vidaD-ataqueA
-
+	sub $t3,$t3,$t4 
 	addi $t1,$zero,1
 	slt $t0,$t3,$t1
 	beq $t0,0,exit #vida <1
 	   li $t3,0
 	   beq $t2,0,resultado #formato
 	   jal resultado2
-	  #jal resultado
 	   lw $t0,0($sp)
 	   lw $t1,4($sp)
 	   lw $ra,8($sp)
-	 #  lw $t2,16($sp)
 	   addi $sp, $sp, 18
 	   jr $ra
 	exit:
 	beq $t2,0,resultado #formato
 	jal resultado2
-	#jal resultado
 	regreso2:
 	lw $t0,0($sp)
 	lw $t1,4($sp)
 	lw $ra,8($sp)
-	#lw $t2,16($sp)
 	addi $sp, $sp, 8
 	jr $ra
 preataque:
@@ -413,30 +347,32 @@ resultado:
     	sw $t1,4($sp)
     	sw $ra,8($sp)
     	sw $t2,16($sp)
-	#resultado
 	li $v0,4
 	la $a0,msjresult
 	syscall
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
+	
 	la $t0,($t7)
 	add $t1,$t5,$zero
 	add $t2,$t4,$zero
 	jal formCom
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
+	
 	la $t0,($t8)
 	add $t1,$t3,$zero
 	add $t2,$t6,$zero
 	jal formCom
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
+	
 	lw $t0,0($sp)
 	lw $t1,4($sp)
 	lw $ra,8($sp)
@@ -449,11 +385,11 @@ resultado2:
     	sw $t1,4($sp)
     	sw $ra,8($sp)
     	sw $t2,16($sp)
-	#resultado
+    	
 	li $v0,4
 	la $a0,msjresult
 	syscall
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
@@ -462,7 +398,7 @@ resultado2:
 	add $t1,$t3,$zero
 	add $t2,$t6,$zero
 	jal formCom
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
@@ -471,7 +407,7 @@ resultado2:
 	add $t1,$t5,$zero
 	add $t2,$t4,$zero
 	jal formCom
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
@@ -482,35 +418,38 @@ resultado2:
 	addi $sp, $sp, 16
 	jal regreso2
 inibatalla:
-	#combatientes
+	li $v0,4
+	la $a0,newLine
+	syscall
+	
 	li $v0,4
 	la $a0,msjcombate
 	syscall
-	#espacio
+	
 	li $v0,4
 	la $a0,spaceline
 	syscall
-	#poke1
+	
 	li $v0,4
-	la $a0,poke1
+	move $a0,$a1
 	syscall
-	#espacio
+	
 	li $v0,4
 	la $a0,spaceline
 	syscall
-	#vs
+	
 	li $v0,4
 	la $a0,msjvs
 	syscall
-	#espacio
+	
 	li $v0,4
 	la $a0,spaceline
 	syscall
-	#poke2
+	
 	li $v0,4
-	la $a0,poke2
+	move $a0,$a3
 	syscall
-	#salto
+	
 	li $v0,4
 	la $a0,newLine
 	syscall
@@ -521,31 +460,31 @@ formCom:
     	sw $t0,4($sp)
     	sw $t1,8($sp)
     	sw $t2,16($sp)
-	#nombre atacante
+	
 	li $v0,4
 	move $a0,$t0
 	syscall
-	#espacio
+	
 	li $v0,4
 	la $a0,spaceline
 	syscall
-	#vida atacante
+	
 	li $v0,4
 	la $a0,msjvida
 	syscall
-	#respuesta vida atacante
+
 	li $v0,1
 	move $a0,$t1
 	syscall
-	#espacio
+	
 	li $v0,4
 	la $a0,spaceline
 	syscall
-	#ataque atacante
+	
         li $v0,4
 	la $a0,msjAtaque
 	syscall
-	#respuesta ataque atacante
+	
 	li $v0,1
 	move $a0,$t2
 	syscall
@@ -556,15 +495,15 @@ formCom:
 	addi $sp, $sp, 16
 	jr $ra
 atacaa:
-	#espacio
+	
 	li $v0,4
 	la $a0,spaceline
 	syscall
-	#ataca a 
+	
 	li $v0,4
 	la $a0,msjatacaa
 	syscall
-	#espacio
+	
 	li $v0,4
 	la $a0,spaceline
 	syscall

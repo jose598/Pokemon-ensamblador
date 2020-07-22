@@ -62,10 +62,10 @@ main:
 	
 	
 	
-	#move $a0,$s5
-	#move $a1,$s6
-	#move $a2,$s4
-	#move $a3, $s3
+	move $a0,$s5 #tipo1
+	move $a1,$s6 #poke1
+	move $a2,$s4 #tipo2
+	move $a3, $s3  #poke2
 	jal MundoPoke
 	j end
 	
