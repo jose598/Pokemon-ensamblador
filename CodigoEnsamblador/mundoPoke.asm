@@ -63,25 +63,27 @@ newLine: .asciiz "\n"
 .globl MundoPoke
 
 MundoPoke:
-	
 	jal leearreglo
 	jal leematriz
 	jal cardato_batalla
 	jal calbase
-	jal pokeIncompatible #si el ataque de ambos es 0
+	jal pokeIncompatible
 	jal inibatalla
 	jal batalla
 	j end
-	
+#funcionalidad: lee el arreglo de tipos pokemons y compara sus elementos con el tipo de pokemons ingresados 
+#retorna: indices de tipo 1 y tipo 2
 leearreglo:
 	addi $sp, $sp, -4
     	sw $ra,0($sp)
-	addi $s1,$zero,0 #1 lee matriz
+	addi $s1,$zero,0 
 	add $s2,$zero,$zero
 	la $s0, Pokeskin
 	j principal
+#funcionalidad: lee la matriz de ataques pokemons e indexa los indices de tipos
+#retorna: ataques pokemon 1 y pokemon 2
 leematriz:
-	addi $s1,$zero,1 #1 lee matriz
+	addi $s1,$zero,1 
 	la $s0, PokeAttack
 	add $s2,$zero,$zero
 	j principal
@@ -108,11 +110,10 @@ bucle2:
 		la $t9,indextipo1
 	  	la $s4,indextipo2
 	  	j fataque
-larreglo:
-		
-	 	lw $s3, ($t3)
-		add $t3, $s3, $zero
-		jal compare
+larreglo:	
+	lw $s3, ($t3)
+	add $t3, $s3, $zero
+	jal compare
 		
 	continua:
 	beq $s2,2,re
@@ -120,7 +121,6 @@ larreglo:
 	blt $t6, $s7, bucle2
 	addi $t0, $t0, 1
 	blt $t0, $s7, bucle1
-
 
 compare:
 	addi $sp, $sp, -24
@@ -192,21 +192,21 @@ fataque:
 	 	lb $s4,($s4)
 	 	bne $t0,$s4,continua
 		   beq $s2,1,salto1
-		       la $s5, Ataque1
+		        la $s5, Ataque1
 			swc1 $f3, ($s5) 
 		        addi $s2,$zero,1
-		       
-		       j principal
+		        j principal
 		    salto1:
 		       la $t9, Ataque2
-			swc1 $f3, ($t9)
-			
+		       swc1 $f3, ($t9)
 		       j Guardaataque   
 Guardaataque:	
 	la $a0,Ataque1
 	la $a0,Ataque2
-	 jr $ra
-	
+	jr $ra
+	 
+#funcionalidad: asigna a los registros los datos necesarios para la batalla 
+#retorna: ataque,base,vidas	
 cardato_batalla:
 	l.s $f0, Ataque1
 	l.s $f1, Ataque2
@@ -217,7 +217,8 @@ cardato_batalla:
 	lb $s5,($s5)
 	add $t2,$zero,$zero 
 	jr $ra
-
+#funcionalidad:  multiplicas los ataques por la base
+#retorna: ataques de poke 1 y poke 2 potenciados
 calbase: 
 	mul.s $f0,$f2,$f0
 	mul.s $f1,$f2,$f1 
@@ -226,7 +227,8 @@ calbase:
 	mfc1 $s2, $f0 
 	mfc1 $s3, $f1 
 	jr $ra
-	
+#funcionalidad: si el ataque de ambos son 0 son incompatibles para luchar
+#retorna: imprime advertencia y finaliza la batalla
 pokeIncompatible:
 	addi $sp, $sp, -4
     	sw $ra,0($sp)
@@ -246,16 +248,17 @@ escimcop:
 	la $a0,alertincomp
 	syscall
 	j end
-
+#funcionalidad: genera la batalla Pokemon
+#retorna: imprime el proceso y resultados de la batalla
 batalla: 
 	beqz $s4,endact
 	beqz $s5,endef
-	add $t4,$s2,$zero #atacante
-	add $t6,$s3,$zero #defensa
-	move $t5,$s4 #atacante
-	move $t3,$s5 #defensa
-	move $t7,$a1 #atacante nom
-	move $t8,$a3 #defensor nom
+	add $t4,$s2,$zero 
+	add $t6,$s3,$zero 
+	move $t5,$s4 
+	move $t3,$s5 
+	move $t7,$a1 
+	move $t8,$a3 
 	add $t2,$zero,$zero
 	jal atacar
 	move $s5,$t3
@@ -265,12 +268,12 @@ batalla:
 	syscall
 	
 	beqz $s5,endef	
-	add $t4,$s3,$zero #atacante
-	add $t6,$s2,$zero #defensa
-	move $t5,$s5 #atacante
-	move $t3,$s4 #defensa
-	move $t7,$a3 #defensa nom
-	move $t8,$a1 #atacante nom
+	add $t4,$s3,$zero 
+	add $t6,$s2,$zero 
+	move $t5,$s5 
+	move $t3,$s4 
+	move $t7,$a3 
+	move $t8,$a1 
 	li $t2,1
 	jal atacar
 	move $s4,$t3
@@ -302,9 +305,9 @@ atacar:
 	sub $t3,$t3,$t4 
 	addi $t1,$zero,1
 	slt $t0,$t3,$t1
-	beq $t0,0,exit #vida <1
+	beq $t0,0,exit 
 	   li $t3,0
-	   beq $t2,0,resultado #formato
+	   beq $t2,0,resultado 
 	   jal resultado2
 	   lw $t0,0($sp)
 	   lw $t1,4($sp)
@@ -320,6 +323,7 @@ atacar:
 	lw $ra,8($sp)
 	addi $sp, $sp, 8
 	jr $ra
+	
 preataque:
 	addi $sp, $sp, -16
     	sw $t0,0($sp)
@@ -341,6 +345,7 @@ preataque:
 	lw $t2,16($sp)
 	addi $sp, $sp, 16
 	jr $ra
+	
 resultado:
 	addi $sp, $sp, -16
     	sw $t0,0($sp)
@@ -379,6 +384,7 @@ resultado:
 	lw $t2,16($sp)
 	addi $sp, $sp, 16
 	jal regreso2
+	
 resultado2:
 	addi $sp, $sp, -16
     	sw $t0,0($sp)
@@ -417,6 +423,7 @@ resultado2:
 	lw $t2,16($sp)
 	addi $sp, $sp, 16
 	jal regreso2
+	
 inibatalla:
 	li $v0,4
 	la $a0,newLine
@@ -453,7 +460,12 @@ inibatalla:
 	li $v0,4
 	la $a0,newLine
 	syscall
+	
+	li $v0,4
+	la $a0,newLine
+	syscall
 	jr $ra
+	
 formCom:
 	addi $sp, $sp, -16
     	sw $ra,0($sp)

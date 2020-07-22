@@ -1,7 +1,12 @@
 
 .data
 
+<<<<<<< HEAD
 file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+=======
+#file:   .asciiz "C:\\Users\\Francisco\\Desktop\\Ensamblador\\pokeTypes.txt"      # ruta Absoluta..
+file:   .asciiz "C:\\Users\\TASHZ\\Desktop\\mars\\Pokemon-ensamblador\\pokeTypes.txt" 
+>>>>>>> ae8c9906596bdaf06c509def7377ae15dabc22db
 poke1:    .space 50
 poke2: .space 50
 tipo1:    .space 50
